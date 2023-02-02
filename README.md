@@ -23,7 +23,7 @@ Note that there is no comma after the last element in the array. Objects look li
 }
 ```
 
-Note that strings and keys are always in `"` quotation marks, but numbers are not. A nested object looks like:
+Note that strings and keys are always in `"` quotation marks, but numbers are not. An object with nested arrays as values looks like:
 
 ```json
 {
@@ -52,7 +52,7 @@ It is possible to pass the tests with a less-than ideal implementation. Focus fi
 
   - [ ] Do not use `String` replacement or concatenation. Use iteration instead.
 
-  - [ ] Reuse methods as much as possible. You should be able to use `asArray` within your `asNestedArray` method.
+  - [ ] Reuse methods as much as possible. You should be able to use `wwriteArray` within your `writeObjectArrays` method.
 
   - [ ] Try to avoid needing extra logic within your loops. For example, avoid testing *every* element to see if it is the last one.
 
