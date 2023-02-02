@@ -23,9 +23,9 @@ import java.util.Set;
  * concurrently, access must be synchronized externally.
  *
  * @author CS 272 Software Development (University of San Francisco)
- * @version Fall 2022
+ * @version Spring 2023
  */
-public class PrettyJsonWriter {
+public class JsonWriter {
 	/**
 	 * Indents the writer by the specified number of times. Does nothing if the
 	 * indentation level is 0 or less.
@@ -54,8 +54,8 @@ public class PrettyJsonWriter {
 	}
 
 	/**
-	 * Indents and then writes the text element surrounded by {@code " "}
-	 * quotation marks.
+	 * Indents and then writes the text element surrounded by {@code " "} quotation
+	 * marks.
 	 *
 	 * @param element the element to write
 	 * @param writer the writer to use
@@ -75,16 +75,15 @@ public class PrettyJsonWriter {
 	 * @param elements the elements to write
 	 * @param writer the writer to use
 	 * @param indent the initial indent level; the first bracket is not indented,
-	 *   inner elements are indented by one, and the last bracket is indented at
-	 *   the initial indentation level
+	 *   inner elements are indented by one, and the last bracket is indented at the
+	 *   initial indentation level
 	 * @throws IOException if an IO error occurs
 	 *
 	 * @see Writer#write(String)
 	 * @see #writeIndent(Writer, int)
 	 * @see #writeIndent(String, Writer, int)
 	 */
-	public static void writeArray(Collection<? extends Number> elements,
-			Writer writer, int indent) throws IOException {
+	public static void writeArray(Collection<? extends Number> elements, Writer writer, int indent) throws IOException {
 		// TODO Implement writeArray(...)
 		throw new UnsupportedOperationException("Not yet implemented.");
 	}
@@ -100,8 +99,7 @@ public class PrettyJsonWriter {
 	 * @see StandardCharsets#UTF_8
 	 * @see #writeArray(Collection, Writer, int)
 	 */
-	public static void writeArray(Collection<? extends Number> elements,
-			Path path) throws IOException {
+	public static void writeArray(Collection<? extends Number> elements, Path path) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, UTF_8)) {
 			writeArray(elements, writer, 0);
 		}
@@ -133,16 +131,15 @@ public class PrettyJsonWriter {
 	 * @param elements the elements to write
 	 * @param writer the writer to use
 	 * @param indent the initial indent level; the first bracket is not indented,
-	 *   inner elements are indented by one, and the last bracket is indented at
-	 *   the initial indentation level
+	 *   inner elements are indented by one, and the last bracket is indented at the
+	 *   initial indentation level
 	 * @throws IOException if an IO error occurs
 	 *
 	 * @see Writer#write(String)
 	 * @see #writeIndent(Writer, int)
 	 * @see #writeIndent(String, Writer, int)
 	 */
-	public static void writeObject(Map<String, ? extends Number> elements,
-			Writer writer, int indent) throws IOException {
+	public static void writeObject(Map<String, ? extends Number> elements, Writer writer, int indent) throws IOException {
 		// TODO Implement writeObject(...)
 		throw new UnsupportedOperationException("Not yet implemented.");
 	}
@@ -158,8 +155,7 @@ public class PrettyJsonWriter {
 	 * @see StandardCharsets#UTF_8
 	 * @see #writeObject(Map, Writer, int)
 	 */
-	public static void writeObject(Map<String, ? extends Number> elements,
-			Path path) throws IOException {
+	public static void writeObject(Map<String, ? extends Number> elements, Path path) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, UTF_8)) {
 			writeObject(elements, writer, 0);
 		}
@@ -187,14 +183,14 @@ public class PrettyJsonWriter {
 
 	/**
 	 * Writes the elements as a pretty JSON object with nested arrays. The generic
-	 * notation used allows this method to be used for any type of map with any
-	 * type of nested collection of number objects.
+	 * notation used allows this method to be used for any type of map with any type
+	 * of nested collection of number objects.
 	 *
 	 * @param elements the elements to write
 	 * @param writer the writer to use
 	 * @param indent the initial indent level; the first bracket is not indented,
-	 *   inner elements are indented by one, and the last bracket is indented at
-	 *   the initial indentation level
+	 *   inner elements are indented by one, and the last bracket is indented at the
+	 *   initial indentation level
 	 * @throws IOException if an IO error occurs
 	 *
 	 * @see Writer#write(String)
@@ -202,20 +198,19 @@ public class PrettyJsonWriter {
 	 * @see #writeIndent(String, Writer, int)
 	 * @see #writeArray(Collection)
 	 */
-	public static void writeNestedArrays(
-			Map<String, ? extends Collection<? extends Number>> elements,
-			Writer writer, int indent) throws IOException {
-		// TODO Implement writeNestedArrays(...)
+	public static void writeObjectArrays(Map<String, ? extends Collection<? extends Number>> elements, Writer writer,
+			int indent) throws IOException {
+		// TODO Implement writeObjectArray(...)
 		throw new UnsupportedOperationException("Not yet implemented.");
 
 		/*
-		 * TODO If you choose to use iterators, use the var keyword so you do not
-		 * need to explicitly type the iterator:
+		 * TODO If you choose to use iterators, use the var keyword so you do not need
+		 * to explicitly type the iterator:
 		 *
 		 * var iterator = elements.entrySet().iterator();
 		 *
-		 * Iterators are not required for this, however. If the syntax is throwing
-		 * you off, treat this as if elements had this type:
+		 * Iterators are not required for this, however. If the syntax is throwing you
+		 * off, treat this as if elements had this type:
 		 *
 		 * TreeMap<String, TreeSet<Integer>> elements
 		 *
@@ -236,13 +231,12 @@ public class PrettyJsonWriter {
 	 *
 	 * @see Files#newBufferedReader(Path, java.nio.charset.Charset)
 	 * @see StandardCharsets#UTF_8
-	 * @see #writeNestedArrays(Map, Writer, int)
+	 * @see #writeObjectArrays(Map, Writer, int)
 	 */
-	public static void writeNestedArrays(
-			Map<String, ? extends Collection<? extends Number>> elements, Path path)
+	public static void writeObjectArrays(Map<String, ? extends Collection<? extends Number>> elements, Path path)
 			throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, UTF_8)) {
-			writeNestedArrays(elements, writer, 0);
+			writeObjectArrays(elements, writer, 0);
 		}
 	}
 
@@ -253,13 +247,12 @@ public class PrettyJsonWriter {
 	 * @return a {@link String} containing the elements in pretty JSON format
 	 *
 	 * @see StringWriter
-	 * @see #writeNestedArrays(Map, Writer, int)
+	 * @see #writeObjectArrays(Map, Writer, int)
 	 */
-	public static String writeNestedArrays(
-			Map<String, ? extends Collection<? extends Number>> elements) {
+	public static String writeObjectArrays(Map<String, ? extends Collection<? extends Number>> elements) {
 		try {
 			StringWriter writer = new StringWriter();
-			writeNestedArrays(elements, writer, 0);
+			writeObjectArrays(elements, writer, 0);
 			return writer.toString();
 		}
 		catch (IOException e) {
@@ -275,8 +268,8 @@ public class PrettyJsonWriter {
 	 * @param elements the elements to write
 	 * @param writer the writer to use
 	 * @param indent the initial indent level; the first bracket is not indented,
-	 *   inner elements are indented by one, and the last bracket is indented at
-	 *   the initial indentation level
+	 *   inner elements are indented by one, and the last bracket is indented at the
+	 *   initial indentation level
 	 * @throws IOException if an IO error occurs
 	 *
 	 * @see Writer#write(String)
@@ -284,15 +277,14 @@ public class PrettyJsonWriter {
 	 * @see #writeIndent(String, Writer, int)
 	 * @see #writeObject(Map)
 	 */
-	public static void writeNestedObjects(
-			Collection<? extends Map<String, ? extends Number>> elements,
-			Writer writer, int indent) throws IOException {
-		// TODO Implement writeNestedObjects(...)
+	public static void writeArrayObjects(Collection<? extends Map<String, ? extends Number>> elements, Writer writer,
+			int indent) throws IOException {
+		// TODO Implement writeArrayObjects(...)
 		throw new UnsupportedOperationException("Not yet implemented.");
 
 		/*
-		 * TODO If you choose to use iterators, use the var keyword so you do not
-		 * need to explicitly type the iterator:
+		 * TODO If you choose to use iterators, use the var keyword so you do not need
+		 * to explicitly type the iterator:
 		 *
 		 * var iterator = elements.iterator();
 		 *
@@ -300,8 +292,8 @@ public class PrettyJsonWriter {
 		 *
 		 * var element = iterator.next();
 		 *
-		 * Iterators are not required for this, however. If the syntax is throwing
-		 * you off, treat this as if elements had this type:
+		 * Iterators are not required for this, however. If the syntax is throwing you
+		 * off, treat this as if elements had this type:
 		 *
 		 * TreeSet<TreeMap<String, Integer>> elements
 		 *
@@ -318,13 +310,12 @@ public class PrettyJsonWriter {
 	 *
 	 * @see Files#newBufferedReader(Path, java.nio.charset.Charset)
 	 * @see StandardCharsets#UTF_8
-	 * @see #writeNestedObjects(Collection)
+	 * @see #writeArrayObjects(Collection)
 	 */
-	public static void writeNestedObjects(
-			Collection<? extends Map<String, ? extends Number>> elements, Path path)
+	public static void writeArrayObjects(Collection<? extends Map<String, ? extends Number>> elements, Path path)
 			throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, UTF_8)) {
-			writeNestedObjects(elements, writer, 0);
+			writeArrayObjects(elements, writer, 0);
 		}
 	}
 
@@ -335,13 +326,12 @@ public class PrettyJsonWriter {
 	 * @return a {@link String} containing the elements in pretty JSON format
 	 *
 	 * @see StringWriter
-	 * @see #writeNestedObjects(Collection)
+	 * @see #writeArrayObjects(Collection)
 	 */
-	public static String writeNestedObjects(
-			Collection<? extends Map<String, ? extends Number>> elements) {
+	public static String writeArrayObjects(Collection<? extends Map<String, ? extends Number>> elements) {
 		try {
 			StringWriter writer = new StringWriter();
-			writeNestedObjects(elements, writer, 0);
+			writeArrayObjects(elements, writer, 0);
 			return writer.toString();
 		}
 		catch (IOException e) {
@@ -370,13 +360,13 @@ public class PrettyJsonWriter {
 		System.out.println(writeObject(Map.of("hello", 42, "world", 67)));
 
 		System.out.println("\nNested Arrays:");
-		System.out.println(writeNestedArrays(Collections.emptyMap()));
-		System.out.println(writeNestedArrays(Map.of("hello", single)));
-		System.out.println(writeNestedArrays(Map.of("hello", single, "world", simple)));
+		System.out.println(writeObjectArrays(Collections.emptyMap()));
+		System.out.println(writeObjectArrays(Map.of("hello", single)));
+		System.out.println(writeObjectArrays(Map.of("hello", single, "world", simple)));
 
 		System.out.println("\nNested Objects:");
-		System.out.println(writeNestedObjects(Collections.emptyList()));
-		System.out.println(writeNestedObjects(Set.of(Map.of("hello", 3.12))));
-		System.out.println(writeNestedObjects(Set.of(Map.of("hello", 3.12, "world", 2.04), Map.of("apple", 0.04))));
+		System.out.println(writeArrayObjects(Collections.emptyList()));
+		System.out.println(writeArrayObjects(Set.of(Map.of("hello", 3.12))));
+		System.out.println(writeArrayObjects(Set.of(Map.of("hello", 3.12, "world", 2.04), Map.of("apple", 0.04))));
 	}
 }

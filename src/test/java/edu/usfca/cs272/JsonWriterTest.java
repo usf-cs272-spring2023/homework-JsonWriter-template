@@ -24,12 +24,13 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer.MethodName;
+import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -40,15 +41,15 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 /**
- * Tests the {@link PrettyJsonWriter} class.
+ * Tests the {@link JsonWriter} class.
  *
  * @author CS 272 Software Development (University of San Francisco)
- * @version Fall 2022
+ * @version Spring 2023
  */
-@TestMethodOrder(MethodName.class)
-public class PrettyJsonWriterTest {
+@TestClassOrder(ClassOrderer.ClassName.class)
+public class JsonWriterTest {
 	/**
-	 * Tests the {@link PrettyJsonWriter#writeArray(Collection, Path)} method.
+	 * Tests the {@link JsonWriter#writeArray(Collection, Path)} method.
 	 */
 	@Nested
 	@TestMethodOrder(OrderAnnotation.class)
@@ -60,7 +61,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(1)
 		@Test
-		public void testEmptySet() throws IOException {
+		public void testEmpty() throws IOException {
 			String name = "json-array-empty.json";
 			runTest(new LinkedList<Integer>(), name);
 		}
@@ -72,7 +73,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(2)
 		@Test
-		public void testSingleSet() throws IOException {
+		public void testSingle() throws IOException {
 			String name = "json-array-single.json";
 			HashSet<Integer> elements = new HashSet<>();
 
@@ -87,7 +88,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(3)
 		@Test
-		public void testSimpleSet() throws IOException {
+		public void testSet() throws IOException {
 			String name = "json-array-simple.json";
 			TreeSet<Integer> elements = new TreeSet<>();
 
@@ -102,7 +103,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(4)
 		@Test
-		public void testSimpleList() throws IOException {
+		public void testList() throws IOException {
 			String name = "json-array-simple.json";
 			List<Integer> elements = List.of(65, 66, 67, 68);
 			runTest(elements, name);
@@ -116,19 +117,18 @@ public class PrettyJsonWriterTest {
 		 *
 		 * @throws IOException if an I/O error occurs
 		 */
-		public void runTest(Collection<Integer> elements, String name)
-				throws IOException {
+		public void runTest(Collection<Integer> elements, String name) throws IOException {
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
-			PrettyJsonWriter.writeArray(elements, actualPath);
+			JsonWriter.writeArray(elements, actualPath);
 			compareFiles(actualPath, expectPath);
 		}
 	}
 
 	/**
-	 * Tests the {@link PrettyJsonWriter#writeObject(java.util.Map, Path)} method.
+	 * Tests the {@link JsonWriter#writeObject(java.util.Map, Path)} method.
 	 */
 	@Nested
 	@TestMethodOrder(OrderAnnotation.class)
@@ -140,7 +140,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(1)
 		@Test
-		public void testEmptyMap() throws IOException {
+		public void testEmpty() throws IOException {
 			String name = "json-object-empty.json";
 			runTest(new TreeMap<String, Integer>(), name);
 		}
@@ -152,7 +152,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(2)
 		@Test
-		public void testSinglePair() throws IOException {
+		public void testSingle() throws IOException {
 			String name = "json-object-single.json";
 			HashMap<String, Integer> elements = new HashMap<>();
 
@@ -167,7 +167,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(3)
 		@Test
-		public void testSimpleIntegerMap() throws IOException {
+		public void testInteger() throws IOException {
 			String name = "json-object-simple.json";
 			TreeMap<String, Integer> elements = new TreeMap<>();
 
@@ -185,7 +185,7 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(3)
 		@Test
-		public void testSimpleDoubleMap() throws IOException {
+		public void testDouble() throws IOException {
 			String name = "json-object-double.json";
 			TreeMap<String, Double> elements = new TreeMap<>();
 
@@ -204,13 +204,12 @@ public class PrettyJsonWriterTest {
 		 *
 		 * @throws IOException if an I/O error occurs
 		 */
-		public void runTest(Map<String, ? extends Number> elements, String name)
-				throws IOException {
+		public void runTest(Map<String, ? extends Number> elements, String name) throws IOException {
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
-			PrettyJsonWriter.writeObject(elements, actualPath);
+			JsonWriter.writeObject(elements, actualPath);
 			compareFiles(actualPath, expectPath);
 		}
 	}
@@ -230,15 +229,15 @@ public class PrettyJsonWriterTest {
 		 */
 		@Test
 		@Order(1)
-		public void testEmptyArray() throws IOException {
-			String name = "json-indented-array-empty.json";
+		public void testArrayEmpty() throws IOException {
+			String name = "json-array-empty-indented.json";
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
 
 			try (BufferedWriter writer = Files.newBufferedWriter(actualPath, UTF_8)) {
-				PrettyJsonWriter.writeArray(Collections.emptyList(), writer, 2);
+				JsonWriter.writeArray(Collections.emptyList(), writer, 2);
 			}
 
 			compareFiles(actualPath, expectPath);
@@ -251,15 +250,15 @@ public class PrettyJsonWriterTest {
 		 */
 		@Test
 		@Order(2)
-		public void testEmptyObject() throws IOException {
-			String name = "json-indented-object-empty.json";
+		public void testObjectEmpty() throws IOException {
+			String name = "json-object-empty-indented.json";
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
 
 			try (BufferedWriter writer = Files.newBufferedWriter(actualPath, UTF_8)) {
-				PrettyJsonWriter.writeObject(Collections.emptyMap(), writer, 2);
+				JsonWriter.writeObject(Collections.emptyMap(), writer, 2);
 			}
 
 			compareFiles(actualPath, expectPath);
@@ -272,15 +271,15 @@ public class PrettyJsonWriterTest {
 		 */
 		@Test
 		@Order(3)
-		public void testSimpleArray() throws IOException {
-			String name = "json-indented-array-simple.json";
+		public void testArraySimple() throws IOException {
+			String name = "json-array-simple-indented.json";
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
 
 			try (BufferedWriter writer = Files.newBufferedWriter(actualPath, UTF_8)) {
-				PrettyJsonWriter.writeArray(List.of(-5, -4, -3, -2, -1), writer, 2);
+				JsonWriter.writeArray(List.of(-5, -4, -3, -2, -1), writer, 2);
 			}
 
 			compareFiles(actualPath, expectPath);
@@ -293,8 +292,8 @@ public class PrettyJsonWriterTest {
 		 */
 		@Test
 		@Order(3)
-		public void testSimpleObject() throws IOException {
-			String name = "json-indented-object-simple.json";
+		public void testObjectSimple() throws IOException {
+			String name = "json-object-simple-indented.json";
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 			Map<String, Integer> simple = Map.of("hello", 5, "hi", 2, "howdy", 5, "greetings", 9);
@@ -303,7 +302,7 @@ public class PrettyJsonWriterTest {
 			Files.deleteIfExists(actualPath);
 
 			try (BufferedWriter writer = Files.newBufferedWriter(actualPath, UTF_8)) {
-				PrettyJsonWriter.writeObject(sorted, writer, 2);
+				JsonWriter.writeObject(sorted, writer, 2);
 			}
 
 			compareFiles(actualPath, expectPath);
@@ -316,8 +315,8 @@ public class PrettyJsonWriterTest {
 		 */
 		@Test
 		@Order(1)
-		public void testEmptyNestedArray() throws IOException {
-			String name = "json-indented-nested-empty.json";
+		public void testObjectArraysEmpty() throws IOException {
+			String name = "json-object-empty-indented.json";
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 			HashMap<String, HashSet<Integer>> empty = new HashMap<>();
@@ -325,7 +324,7 @@ public class PrettyJsonWriterTest {
 			Files.deleteIfExists(actualPath);
 
 			try (BufferedWriter writer = Files.newBufferedWriter(actualPath, UTF_8)) {
-				PrettyJsonWriter.writeNestedArrays(empty, writer, 2);
+				JsonWriter.writeObjectArrays(empty, writer, 2);
 			}
 
 			compareFiles(actualPath, expectPath);
@@ -338,8 +337,8 @@ public class PrettyJsonWriterTest {
 		 */
 		@Test
 		@Order(1)
-		public void testSimpleNestedArray() throws IOException {
-			String name = "json-indented-nested-simple.json";
+		public void testObjectArraysSimple() throws IOException {
+			String name = "json-object-arrays-simple-indented.json";
 
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
@@ -352,7 +351,7 @@ public class PrettyJsonWriterTest {
 			Files.deleteIfExists(actualPath);
 
 			try (BufferedWriter writer = Files.newBufferedWriter(actualPath, UTF_8)) {
-				PrettyJsonWriter.writeNestedArrays(simple, writer, 2);
+				JsonWriter.writeObjectArrays(simple, writer, 2);
 			}
 
 			compareFiles(actualPath, expectPath);
@@ -360,12 +359,11 @@ public class PrettyJsonWriterTest {
 	}
 
 	/**
-	 * Tests the {@link PrettyJsonWriter#writeNestedArrays(java.util.Map, Path)}
-	 * method.
+	 * Tests the {@link JsonWriter#writeObjectArrays(java.util.Map, Path)} method.
 	 */
 	@Nested
 	@TestMethodOrder(OrderAnnotation.class)
-	public class D_NestedObjectTests {
+	public class D_ObjectArraysTests {
 		/**
 		 * Tests an empty nested map.
 		 *
@@ -373,9 +371,9 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(1)
 		@Test
-		public void testEmptyMap() throws IOException {
+		public void testEmpty() throws IOException {
 			String name = "json-object-empty.json";
-			runObjectTest(new TreeMap<String, ArrayList<Integer>>(), name);
+			runTest(new TreeMap<String, ArrayList<Integer>>(), name);
 		}
 
 		/**
@@ -385,13 +383,13 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(2)
 		@Test
-		public void testObjectSingleEntry() throws IOException {
-			String name = "json-nested-object-single.json";
+		public void testSingleHash() throws IOException {
+			String name = "json-object-arrays-single.json";
 			HashMap<String, HashSet<Integer>> elements = new HashMap<>();
 
 			elements.put("The Answer", new HashSet<>());
 			elements.get("The Answer").add(42);
-			runObjectTest(elements, name);
+			runTest(elements, name);
 		}
 
 		/**
@@ -401,8 +399,8 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(3)
 		@Test
-		public void testObjectSimpleTree() throws IOException {
-			String name = "json-nested-object-simple.json";
+		public void testSimpleTree() throws IOException {
+			String name = "json-object-arrays-simple.json";
 			TreeMap<String, TreeSet<Integer>> elements = new TreeMap<>();
 
 			elements.put("a", new TreeSet<>());
@@ -414,7 +412,7 @@ public class PrettyJsonWriterTest {
 			elements.get("b").add(3);
 			elements.get("b").add(4);
 
-			runObjectTest(elements, name);
+			runTest(elements, name);
 		}
 
 		/**
@@ -425,24 +423,22 @@ public class PrettyJsonWriterTest {
 		 *
 		 * @throws IOException if an I/O error occurs
 		 */
-		public void runObjectTest(Map<String, ? extends Collection<Integer>> elements,
-				String name) throws IOException {
+		public void runTest(Map<String, ? extends Collection<Integer>> elements, String name) throws IOException {
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
-			PrettyJsonWriter.writeNestedArrays(elements, actualPath);
+			JsonWriter.writeObjectArrays(elements, actualPath);
 			compareFiles(actualPath, expectPath);
 		}
 	}
 
 	/**
-	 * Tests the {@link PrettyJsonWriter#writeNestedObjects(Collection)}
-	 * method.
+	 * Tests the {@link JsonWriter#writeArrayObjects(Collection)} method.
 	 */
 	@Nested
 	@TestMethodOrder(OrderAnnotation.class)
-	public class E_NestedArrayTests {
+	public class E_ArrayObjectsTests {
 
 		/**
 		 * Tests an empty nested array.
@@ -451,9 +447,9 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(1)
 		@Test
-		public void testEmptyArray() throws IOException {
+		public void testEmpty() throws IOException {
 			String name = "json-array-empty.json";
-			runArrayTest(Collections.emptySet(), name);
+			runTest(Collections.emptySet(), name);
 		}
 
 		/**
@@ -463,11 +459,11 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(2)
 		@Test
-		public void testArraySingleEntry() throws IOException {
-			String name = "json-nested-array-single.json";
+		public void testSingle() throws IOException {
+			String name = "json-array-objects-single.json";
 			HashSet<Map<String, Integer>> elements = new HashSet<>();
 			elements.add(Map.of("The Answer", 42));
-			runArrayTest(elements, name);
+			runTest(elements, name);
 		}
 
 		/**
@@ -477,8 +473,8 @@ public class PrettyJsonWriterTest {
 		 */
 		@Order(3)
 		@Test
-		public void testArraySimpleList() throws IOException {
-			String name = "json-nested-array-simple.json";
+		public void testList() throws IOException {
+			String name = "json-array-objects-simple.json";
 			ArrayList<TreeMap<String, Double>> elements = new ArrayList<>();
 
 			TreeMap<String, Double> one = new TreeMap<>();
@@ -491,7 +487,7 @@ public class PrettyJsonWriterTest {
 			elements.add(one);
 			elements.add(two);
 
-			runArrayTest(elements, name);
+			runTest(elements, name);
 		}
 
 		/**
@@ -502,13 +498,13 @@ public class PrettyJsonWriterTest {
 		 *
 		 * @throws IOException if an I/O error occurs
 		 */
-		public void runArrayTest(Collection<? extends Map<String, ? extends Number>> elements,
-				String name) throws IOException {
+		public void runTest(Collection<? extends Map<String, ? extends Number>> elements, String name)
+				throws IOException {
 			Path actualPath = ACTUAL_DIR.resolve(name);
 			Path expectPath = EXPECTED_DIR.resolve(name);
 
 			Files.deleteIfExists(actualPath);
-			PrettyJsonWriter.writeNestedObjects(elements, actualPath);
+			JsonWriter.writeArrayObjects(elements, actualPath);
 			compareFiles(actualPath, expectPath);
 		}
 	}
@@ -526,8 +522,7 @@ public class PrettyJsonWriterTest {
 		 * @param method the unauthorized method
 		 */
 		@ParameterizedTest(name = "[{index}: \"{0}\"]")
-		@ValueSource(
-				strings = { "replace", "replaceAll", "replaceFirst", "split", "join" })
+		@ValueSource(strings = { "replace", "replaceAll", "replaceFirst", "split", "join" })
 		public void testInvalidMethods(String method) {
 			String regex = "\\." + method + "\\(";
 			long count = Pattern.compile(regex).matcher(source).results().count();
@@ -537,13 +532,13 @@ public class PrettyJsonWriterTest {
 		}
 
 		/**
-		 * Causes this group of tests to fail if the other non-approach tests are
-		 * not yet passing.
+		 * Causes this group of tests to fail if the other non-approach tests are not
+		 * yet passing.
 		 */
 		@Test
 		public void testOthersPassing() {
 			var request = LauncherDiscoveryRequestBuilder.request()
-					.selectors(DiscoverySelectors.selectClass(PrettyJsonWriterTest.class))
+					.selectors(DiscoverySelectors.selectClass(JsonWriterTest.class))
 					.filters(TagFilter.excludeTags("approach"))
 					.build();
 
@@ -570,10 +565,9 @@ public class PrettyJsonWriterTest {
 		 */
 		@BeforeEach
 		public void setup() throws IOException {
-			String file = PrettyJsonWriter.class.getSimpleName() + ".java";
+			String file = JsonWriter.class.getSimpleName() + ".java";
 			Path path = SOURCE_DIR.resolve(CS272_DIR).resolve(file);
-			Assertions.assertTrue(Files.isReadable(path),
-					"Unable to access source code.");
+			Assertions.assertTrue(Files.isReadable(path), "Unable to access source code.");
 			this.source = Files.readString(path, UTF_8);
 		}
 	}
@@ -609,8 +603,7 @@ public class PrettyJsonWriterTest {
 	 *
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static void compareFiles(Path actualPath, Path expectPath)
-			throws IOException {
+	public static void compareFiles(Path actualPath, Path expectPath) throws IOException {
 		// strips line terminators from file output
 		List<String> actualLines = Files.readAllLines(actualPath, UTF_8);
 		List<String> expectLines = Files.readAllLines(expectPath, UTF_8);
